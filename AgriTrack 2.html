@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriTrack - Agricultural Resource Management</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f3f7f2;
+    color: #1f2937;
+}
+
+/* NAVBAR */
+.navbar {
+    background: #14532d;
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.navbar span {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* MAIN */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+h1 {
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+/* CARDS */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.card .number {
+    font-size: 28px;
+    font-weight: bold;
+    color: #14532d;
+}
+
+/* SECTIONS */
+.section {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* FORM */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 6px;
+}
+
+input, select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+button {
+    border: none;
+    padding: 11px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.add-btn {
+    background: #15803d;
+    color: white;
+}
+
+.add-btn:hover {
+    background: #166534;
+}
+
+.use-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.delete-btn {
+    background: #dc2626;
+    color: white;
+    padding: 7px 10px;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+/* TABLE */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 13px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+    background: #f1f5f9;
+}
+
+.low-stock {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.good-stock {
+    color: #15803d;
+    font-weight: bold;
+}
+
+/* SEARCH */
+.search {
+    margin-bottom: 15px;
+}
+
+/* ALERT */
+.alert {
+    background: #fff7ed;
+    border-left: 5px solid #f97316;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* RESPONSIVE */
+@media(max-width: 800px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 500px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar {
+        padding: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">🌱 AgriTrack</div>
+    <span>Agricultural Resource Management System</span>
+</div>
+
+<div class="container">
+
+    <h1>Resource Dashboard</h1>
+    <p class="subtitle">
+        Track seeds, fertilizers, pesticides, equipment and usage.
+    </p>
+
+    <!-- DASHBOARD CARDS -->
+    <div class="cards">
+
+        <div class="card">
+            <h3>🌾 Seeds</h3>
+            <div class="number" id="seedTotal">0 kg</div>
+        </div>
+
+        <div class="card">
+            <h3>🧪 Fertilizers</h3>
+            <div class="number" id="fertilizerTotal">0 kg</div>
+        </div>
+
+        <div class="card">
+            <h3>🧴 Pesticides</h3>
+            <div class="number" id="pesticideTotal">0 L</div>
+        </div>
+
+        <div class="card">
+            <h3>🚜 Resources</h3>
+            <div class="number" id="resourceTotal">0</div>
+        </div>
+
+    </div>
+
+
+    <!-- ADD RESOURCE -->
+    <div class="section">
+
+        <div class="section-title">
+            <h2>➕ Add Agricultural Resource</h2>
+        </div>
+
+        <div class="form-grid">
+
+            <div>
+                <label>Resource Name</label>
+                <input type="text" id="resourceName"
+                       placeholder="Example: Wheat Seed">
+            </div>
+
+            <div>
+                <label>Category</label>
+                <select id="category">
+                    <option value="Seed">Seed</option>
+                    <option value="Fertilizer">Fertilizer</option>
+                    <option value="Pesticide">Pesticide</option>
+                    <option value="Equipment">Equipment</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Quantity</label>
+                <input type="number" id="quantity"
+                       placeholder="Example: 100">
+            </div>
+
+            <div>
+                <label>Unit</label>
+                <select id="unit">
+                    <option value="kg">kg</option>
+                    <option value="L">L</option>
+                    <option value="units">units</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Location</label>
+                <input type="text" id="location"
+                       placeholder="Example: Store A">
+            </div>
+
+            <div>
+                <label>Minimum Stock Alert</label>
+                <input type="number" id="minimumStock"
+                       placeholder="Example: 20">
+            </div>
+
+        </div>
+
+        <br>
+
+        <button class="add-btn" onclick="addResource()">
+            Add Resource
+        </button>
+
+    </div>
+
+
+    <!-- LOW STOCK -->
+    <div class="section">
+
+        <div class="section-title">
+            <h2>⚠️ Stock Alerts</h2>
+        </div>
+
+        <div id="alerts">
+            <p>No low-stock resources.</p>
+        </div>
+
+    </div>
+
+
+    <!-- RESOURCES TABLE -->
+    <div class="section">
+
+        <div class="section-title">
+            <h2>📦 All Resources</h2>
+        </div>
+
+        <input
+            class="search"
+            type="text"
+            id="search"
+            placeholder="🔍 Search resources..."
+            onkeyup="displayResources()"
+        >
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Use</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+
+                <tbody id="resourceTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- USAGE HISTORY -->
+    <div class="section">
+
+        <div class="section-title">
+            <h2>📊 Usage History</h2>
+        </div>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Resource</th>
+                        <th>Quantity Used</th>
+                    </tr>
+                </thead>
+
+                <tbody id="usageTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   DATA
+========================================== */
+
+let resources = JSON.parse(
+    localStorage.getItem("resources")
+) || [];
+
+let usageHistory = JSON.parse(
+    localStorage.getItem("usageHistory")
+) || [];
+
+
+/* ==========================================
+   ADD RESOURCE
+========================================== */
+
+function addResource() {
+
+    let name = document.getElementById("resourceName").value;
+    let category = document.getElementById("category").value;
+    let quantity = Number(document.getElementById("quantity").value);
+    let unit = document.getElementById("unit").value;
+    let location = document.getElementById("location").value;
+    let minimumStock = Number(
+        document.getElementById("minimumStock").value
+    );
+
+    if (!name || quantity <= 0 || !location) {
+        alert("Please fill all required fields.");
+        return;
+    }
+
+    let resource = {
+
+        id: Date.now(),
+
+        name: name,
+
+        category: category,
+
+        quantity: quantity,
+
+        unit: unit,
+
+        location: location,
+
+        minimumStock: minimumStock
+
+    };
+
+    resources.push(resource);
+
+    saveData();
+
+    clearForm();
+
+    displayResources();
+
+    alert("Resource added successfully!");
+}
+
+
+/* ==========================================
+   CLEAR FORM
+========================================== */
+
+function clearForm() {
+
+    document.getElementById("resourceName").value = "";
+    document.getElementById("quantity").value = "";
+    document.getElementById("location").value = "";
+    document.getElementById("minimumStock").value = "";
+
+}
+
+
+/* ==========================================
+   DISPLAY RESOURCES
+========================================== */
+
+function displayResources() {
+
+    let table = document.getElementById("resourceTable");
+
+    let search = document
+        .getElementById("search")
+        .value
+        .toLowerCase();
+
+    table.innerHTML = "";
+
+    resources
+        .filter(resource =>
+            resource.name.toLowerCase().includes(search)
+        )
+        .forEach(resource => {
+
+            let lowStock =
+                resource.quantity <= resource.minimumStock;
+
+            let row = `
+
+                <tr>
+
+                    <td>
+                        <strong>${resource.name}</strong>
+                    </td>
+
+                    <td>
+                        ${resource.category}
+                    </td>
+
+                    <td>
+                        ${resource.quantity}
+                        ${resource.unit}
+                    </td>
+
+                    <td>
+                        ${resource.location}
+                    </td>
+
+                    <td class="${
+                        lowStock
+                        ? "low-stock"
+                        : "good-stock"
+                    }">
+
+                        ${
+                            lowStock
+                            ? "⚠️ Low Stock"
+                            : "✓ Good"
+                        }
+
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="use-btn"
+                            onclick="useResource(${resource.id})">
+
+                            Use
+
+                        </button>
+
+                    </td>
+
+                    <td>
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteResource(${resource.id})">
+
+                            Delete
+
+                        </button>
+
+                    </td>
+
+                </tr>
+            `;
+
+            table.innerHTML += row;
+
+        });
+
+    updateDashboard();
+
+    displayAlerts();
+
+    displayUsage();
+
+}
+
+
+/* ==========================================
+   USE RESOURCE
+========================================== */
+
+function useResource(id) {
+
+    let resource =
+        resources.find(r => r.id === id);
+
+    if (!resource) return;
+
+    let amount = prompt(
+        `How much ${resource.name} was used?\nAvailable: ${resource.quantity} ${resource.unit}`
+    );
+
+    if (amount === null) return;
+
+    amount = Number(amount);
+
+    if (amount <= 0) {
+
+        alert("Enter a valid quantity.");
+
+        return;
+    }
+
+    if (amount > resource.quantity) {
+
+        alert(
+            `Insufficient stock!\nAvailable: ${resource.quantity} ${resource.unit}`
+        );
+
+        return;
+    }
+
+    resource.quantity -= amount;
+
+    usageHistory.push({
+
+        date: new Date().toLocaleDateString(),
+
+        resource: resource.name,
+
+        quantity: amount + " " + resource.unit
+
+    });
+
+    saveData();
+
+    displayResources();
+
+}
+
+
+/* ==========================================
+   DELETE RESOURCE
+========================================== */
+
+function deleteResource(id) {
+
+    if (!confirm("Delete this resource?")) {
+        return;
+    }
+
+    resources =
+        resources.filter(r => r.id !== id);
+
+    saveData();
+
+    displayResources();
+
+}
+
+
+/* ==========================================
+   DASHBOARD
+========================================== */
+
+function updateDashboard() {
+
+    let seeds = 0;
+    let fertilizers = 0;
+    let pesticides = 0;
+
+    resources.forEach(resource => {
+
+        if (resource.category === "Seed") {
+
+            seeds += resource.quantity;
+
+        }
+
+        if (resource.category === "Fertilizer") {
+
+            fertilizers += resource.quantity;
+
+        }
+
+        if (resource.category === "Pesticide") {
+
+            pesticides += resource.quantity;
+
+        }
+
+    });
+
+    document.getElementById("seedTotal")
+        .innerText = seeds + " kg";
+
+    document.getElementById("fertilizerTotal")
+        .innerText = fertilizers + " kg";
+
+    document.getElementById("pesticideTotal")
+        .innerText = pesticides + " L";
+
+    document.getElementById("resourceTotal")
+        .innerText = resources.length;
+
+}
+
+
+/* ==========================================
+   LOW STOCK ALERTS
+========================================== */
+
+function displayAlerts() {
+
+    let alertBox =
+        document.getElementById("alerts");
+
+    let lowStockResources =
+        resources.filter(
+            r => r.quantity <= r.minimumStock
+        );
+
+    if (lowStockResources.length === 0) {
+
+        alertBox.innerHTML =
+            "<p>✓ No low-stock resources.</p>";
+
+        return;
+
+    }
+
+    alertBox.innerHTML = "";
+
+    lowStockResources.forEach(resource => {
+
+        alertBox.innerHTML += `
+
+            <div class="alert">
+
+                ⚠️ <strong>${resource.name}</strong>
+
+                has only
+
+                <strong>
+                    ${resource.quantity}
+                    ${resource.unit}
+                </strong>
+
+                remaining.
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+
+/* ==========================================
+   USAGE HISTORY
+========================================== */
+
+function displayUsage() {
+
+    let table =
+        document.getElementById("usageTable");
+
+    table.innerHTML = "";
+
+    usageHistory
+        .slice()
+        .reverse()
+        .forEach(record => {
+
+            table.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        ${record.date}
+                    </td>
+
+                    <td>
+                        ${record.resource}
+                    </td>
+
+                    <td>
+                        ${record.quantity}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+}
+
+
+/* ==========================================
+   SAVE DATA
+========================================== */
+
+function saveData() {
+
+    localStorage.setItem(
+        "resources",
+        JSON.stringify(resources)
+    );
+
+    localStorage.setItem(
+        "usageHistory",
+        JSON.stringify(usageHistory)
+    );
+
+}
+
+
+/* ==========================================
+   DEMO DATA
+========================================== */
+
+function addDemoData() {
+
+    if (resources.length > 0) return;
+
+    resources = [
+
+        {
+            id: 1,
+            name: "Wheat Seed",
+            category: "Seed",
+            quantity: 150,
+            unit: "kg",
+            location: "Store A",
+            minimumStock: 30
+        },
+
+        {
+            id: 2,
+            name: "Basmati Rice Seed",
+            category: "Seed",
+            quantity: 100,
+            unit: "kg",
+            location: "Store A",
+            minimumStock: 25
+        },
+
+        {
+            id: 3,
+            name: "Urea",
+            category: "Fertilizer",
+            quantity: 80,
+            unit: "kg",
+            location: "Store B",
+            minimumStock: 20
+        },
+
+        {
+            id: 4,
+            name: "DAP",
+            category: "Fertilizer",
+            quantity: 60,
+            unit: "kg",
+            location: "Store B",
+            minimumStock: 15
+        },
+
+        {
+            id: 5,
+            name: "Insecticide",
+            category: "Pesticide",
+            quantity: 30,
+            unit: "L",
+            location: "Chemical Store",
+            minimumStock: 10
+        }
+
+    ];
+
+    saveData();
+
+}
+
+
+/* ==========================================
+   START APPLICATION
+========================================== */
+
+addDemoData();
+
+displayResources();
+
+</script>
+
+</body>
+</html>
